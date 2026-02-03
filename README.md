@@ -1,7 +1,13 @@
 # PHP_Laravel12_Socialite
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-red" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/Auth-Google%20Login-blue" alt="Google Login">
+  <img src="https://img.shields.io/badge/OAuth-Socialite-orange" alt="Socialite OAuth">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
 
-##  Project Overview
+##  Overview
 
 This project demonstrates how to integrate **Google Social Login** into a Laravel 12 application using **Laravel Socialite**.
 It allows users to authenticate using their Google account without creating a traditional username and password.
