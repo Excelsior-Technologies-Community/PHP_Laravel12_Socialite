@@ -75,9 +75,36 @@
 
 <div class="login-container">
     <div class="login-card">
+
+    @if(session('error'))
+    <div style="
+        background:#f8d7da;
+        color:#842029;
+        padding:12px;
+        border-radius:6px;
+        margin-bottom:15px;
+        font-size:14px;
+    ">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div style="
+        background:#d1e7dd;
+        color:#0f5132;
+        padding:12px;
+        border-radius:6px;
+        margin-bottom:15px;
+        font-size:14px;
+    ">
+        {{ session('success') }}
+    </div>
+@endif
+
         <h2>Sign in to Your Account</h2>
 
-        <a href="{{ url('/auth/google/redirect') }}" class="google-btn">
+       <a href="{{ route('google.redirect') }}" class="google-btn">
             <svg class="google-icon" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.73 1.22 9.24 3.6l6.9-6.9C35.64 2.34 30.18 0 24 0 14.62 0 6.56 5.8 2.56 14.2l8.04 6.24C12.48 14.12 17.74 9.5 24 9.5z"/>
                 <path fill="#4285F4" d="M46.5 24.5c0-1.7-.14-3.34-.4-4.94H24v9.34h12.7c-.55 2.96-2.22 5.47-4.72 7.16l7.36 5.7C43.96 37.5 46.5 31.5 46.5 24.5z"/>
