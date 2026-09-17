@@ -2,28 +2,104 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LoginActivityController;
+use App\Http\Controllers\UserSessionController;
 
-//Welcome
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-//Login
 Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-//Dashboard
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| Google OAuth Routes
+|--------------------------------------------------------------------------
+*/
 
-//Logout
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/login');
-})->name('logout');
+Route::get(
+    '/login/google',
+    [SocialiteController::class, 'redirect']
+)->name('google.redirect');
 
-//Google
-Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect']);
-Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
+Route::get(
+    '/login/google/callback',
+    [SocialiteController::class, 'callback']
+)->name('google.callback');
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'check.session'])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google Profile
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/profile',
+        [ProfileController::class, 'index']
+    )->name('profile');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Login Activity
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/login-activities',
+        [LoginActivityController::class, 'index']
+    )->name('login.activities');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Active Sessions
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/sessions',
+        [UserSessionController::class, 'index']
+    )->name('sessions');
+
+    Route::post(
+        '/sessions/{session}/revoke',
+        [UserSessionController::class, 'revoke']
+    )->name('sessions.revoke');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logout
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/logout',
+        [UserSessionController::class, 'logout']
+    )->name('logout');
+});
