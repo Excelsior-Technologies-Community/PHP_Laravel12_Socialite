@@ -2,592 +2,221 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard - Google Social Login</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
+    <title>Security Dashboard</title>
+
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
 
         body {
-            margin: 0;
-            background: #f4f7fb;
-            font-family: Inter, Arial, Helvetica, sans-serif;
-            color: #1f2937;
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8f9fa 0%,
+                    #eef2ff 50%,
+                    #f8f9fa 100%
+                );
+            min-height: 100vh;
         }
-
-        /* =========================
-           NAVBAR
-        ========================== */
 
         .navbar-custom {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #e9edf3;
-            display: flex;
-            align-items: center;
-            padding: 0 35px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 20px;
-            color: #111827;
-            text-decoration: none;
-        }
-
-        .brand-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #111827;
+        .hero-card {
+            background:
+                linear-gradient(
+                    135deg,
+                    #212529,
+                    #343a40
+                );
             color: white;
-            font-size: 20px;
-        }
-
-        .user-area {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-mini {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-mini img,
-        .user-mini-placeholder {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .user-mini img {
-            object-fit: cover;
-        }
-
-        .user-mini-placeholder {
-            background: #111827;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 600;
-        }
-
-        .user-info {
-            line-height: 1.2;
-        }
-
-        .user-info strong {
-            display: block;
-            font-size: 14px;
-        }
-
-        .user-info span {
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        .logout-btn {
-            border: 0;
-            background: #fff0f0;
-            color: #dc3545;
-            padding: 9px 15px;
-            border-radius: 9px;
-            font-weight: 600;
-            transition: .2s;
-        }
-
-        .logout-btn:hover {
-            background: #dc3545;
-            color: white;
-        }
-
-        /* =========================
-           MAIN
-        ========================== */
-
-        .main-container {
-            max-width: 1250px;
-            margin: auto;
-            padding: 40px 22px 60px;
-        }
-
-        .welcome-section {
-            margin-bottom: 30px;
-        }
-
-        .welcome-section h1 {
-            font-size: 32px;
-            font-weight: 750;
-            margin-bottom: 7px;
-            color: #111827;
-        }
-
-        .welcome-section p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 15px;
-        }
-
-        .google-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: #ffffff;
-            border: 1px solid #e6eaf0;
-            border-radius: 30px;
-            padding: 7px 13px;
-            font-size: 12px;
-            color: #4b5563;
-            margin-top: 15px;
-        }
-
-        .google-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #34a853;
-        }
-
-        /* =========================
-           PROFILE HERO
-        ========================== */
-
-        .profile-hero {
-            background: #111827;
-            border-radius: 20px;
-            padding: 28px;
-            color: white;
-            margin-bottom: 28px;
-            position: relative;
+            border-radius: 24px;
             overflow: hidden;
+            position: relative;
         }
 
-        .profile-hero::after {
+        .hero-card::after {
             content: "";
             position: absolute;
             width: 220px;
             height: 220px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .05);
             right: -70px;
-            top: -90px;
+            top: -80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .profile-hero-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .profile-main {
-            display: flex;
-            align-items: center;
-            gap: 18px;
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            right: 120px;
+            bottom: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .profile-avatar {
-            width: 82px;
-            height: 82px;
-            border-radius: 50%;
+            width: 86px;
+            height: 86px;
             object-fit: cover;
-            border: 4px solid rgba(255, 255, 255, .2);
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.8);
         }
 
-        .profile-placeholder {
-            width: 82px;
-            height: 82px;
+        .default-avatar {
+            width: 86px;
+            height: 86px;
             border-radius: 50%;
-            background: #374151;
-            border: 4px solid rgba(255, 255, 255, .2);
+            background: rgba(255,255,255,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            font-weight: 700;
+            font-size: 38px;
+            border: 4px solid rgba(255,255,255,0.6);
         }
 
-        .profile-main h3 {
-            margin: 0 0 5px;
-            font-size: 23px;
+        .stat-card {
+            border: 0;
+            border-radius: 18px;
+            transition: all 0.2s ease;
         }
 
-        .profile-main p {
-            margin: 0 0 10px;
-            color: #cbd5e1;
-            font-size: 14px;
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08) !important;
         }
 
-        .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(52, 168, 83, .15);
-            color: #8ef0a5;
-            border: 1px solid rgba(52, 168, 83, .3);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .profile-action {
-            position: relative;
-            z-index: 3;
-        }
-
-        .profile-action a {
-            background: white;
-            color: #111827;
-            text-decoration: none;
-            padding: 11px 17px;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            transition: .2s;
-        }
-
-        .profile-action a:hover {
-            transform: translateY(-1px);
-        }
-
-        /* =========================
-           SECTION TITLE
-        ========================== */
-
-        .section-heading {
-            margin-bottom: 16px;
-        }
-
-        .section-heading h2 {
-            font-size: 19px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .section-heading p {
-            margin: 4px 0 0;
-            color: #6b7280;
-            font-size: 13px;
-        }
-
-        /* =========================
-           FEATURE CARDS
-        ========================== */
-
-        .feature-card {
-            height: 100%;
-            background: white;
-            border: 1px solid #e9edf3;
-            border-radius: 16px;
-            padding: 24px;
-            transition: all .25s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 35px rgba(17, 24, 39, .08);
-            border-color: #dce2ea;
-        }
-
-        .feature-icon {
+        .stat-icon {
             width: 48px;
             height: 48px;
-            border-radius: 13px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 21px;
-            margin-bottom: 18px;
         }
 
-        .icon-profile {
-            background: #eef2ff;
-            color: #4f46e5;
+        .feature-card {
+            border: 0;
+            border-radius: 20px;
+            height: 100%;
+            transition: all 0.2s ease;
         }
 
-        .icon-security {
-            background: #ecfdf5;
-            color: #059669;
+        .feature-card:hover {
+            transform: translateY(-3px);
         }
 
-        .icon-devices {
-            background: #fff7ed;
-            color: #ea580c;
-        }
-
-        .icon-logout {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .feature-card h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            color: #6b7280;
-            font-size: 13px;
-            line-height: 1.6;
-            min-height: 42px;
-            margin-bottom: 20px;
-        }
-
-        .feature-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        .feature-link:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================
-           SECURITY STATUS
-        ========================== */
-
-        .security-box {
-            margin-top: 30px;
-            background: white;
-            border: 1px solid #e9edf3;
+        .feature-icon {
+            width: 58px;
+            height: 58px;
             border-radius: 16px;
-            padding: 22px 25px;
-        }
-
-        .security-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .security-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            font-size: 25px;
         }
 
-        .security-title-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #ecfdf5;
-            color: #059669;
+        .security-card {
+            border: 0;
+            border-radius: 20px;
+        }
+
+        .activity-row {
+            transition: background 0.15s ease;
+        }
+
+        .activity-row:hover {
+            background: #f8f9fa;
+        }
+
+        .activity-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .security-title h4 {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 700;
+        .progress {
+            background: #e9ecef;
         }
-
-        .security-title p {
-            margin: 3px 0 0;
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        .secure-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: #ecfdf5;
-            color: #047857;
-            padding: 7px 11px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .secure-status span {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #10b981;
-        }
-
-        /* =========================
-           ALERTS
-        ========================== */
-
-        .alert {
-            border-radius: 11px;
-            border: 0;
-            font-size: 14px;
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
 
         .footer {
-            text-align: center;
-            color: #9ca3af;
-            font-size: 12px;
-            margin-top: 35px;
+            color: #6c757d;
+            font-size: 13px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================== */
-
-        @media (max-width: 768px) {
-
-            .navbar-custom {
-                padding: 0 18px;
-            }
-
-            .brand span {
-                display: none;
-            }
-
-            .user-info {
-                display: none;
-            }
-
-            .main-container {
-                padding: 28px 15px 45px;
-            }
-
-            .welcome-section h1 {
-                font-size: 26px;
-            }
-
-            .profile-hero {
-                padding: 22px;
-            }
-
-            .profile-hero-content {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .profile-action {
-                width: 100%;
-            }
-
-            .profile-action a {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .profile-avatar,
-            .profile-placeholder {
-                width: 65px;
-                height: 65px;
-            }
-
-            .profile-main h3 {
-                font-size: 19px;
-            }
-
-            .logout-btn {
-                padding: 8px 11px;
-            }
-        }
     </style>
 
 </head>
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+@php
+    $user = auth()->user();
+@endphp
 
-    <nav class="navbar-custom">
+<!-- ========================================================= -->
+<!-- NAVBAR -->
+<!-- ========================================================= -->
 
-        <a href="{{ route('dashboard') }}" class="brand">
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
 
-            <div class="brand-icon">
-                <i class="bi bi-shield-lock"></i>
-            </div>
+    <div class="container">
 
-            <span>Socialite Security</span>
+        <a
+            class="navbar-brand fw-bold"
+            href="{{ route('dashboard') }}">
+
+            <i class="bi bi-shield-lock-fill me-2"></i>
+
+            Security Dashboard
 
         </a>
 
-        <div class="user-area">
+        <div class="d-flex align-items-center gap-2">
 
-            <div class="user-mini">
+            <a
+                href="{{ route('profile') }}"
+                class="btn btn-outline-dark btn-sm">
 
-                @if(auth()->user()->avatar)
+                <i class="bi bi-person-circle me-1"></i>
 
-                    <img
-                        src="{{ auth()->user()->avatar }}"
-                        alt="Profile">
+                Profile
 
-                @else
+            </a>
 
-                    <div class="user-mini-placeholder">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                    </div>
+            <form
+                method="POST"
+                action="{{ route('logout') }}"
+                class="d-inline">
 
-                @endif
-
-                <div class="user-info">
-
-                    <strong>
-                        {{ auth()->user()->name }}
-                    </strong>
-
-                    <span>
-                        Google Account
-                    </span>
-
-                </div>
-
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
                 @csrf
 
-                <button type="submit" class="logout-btn">
+                <button
+                    type="submit"
+                    class="btn btn-dark btn-sm">
 
                     <i class="bi bi-box-arrow-right me-1"></i>
 
@@ -599,88 +228,1259 @@
 
         </div>
 
-    </nav>
+    </div>
+
+</nav>
 
 
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
+<!-- ========================================================= -->
+<!-- MAIN -->
+<!-- ========================================================= -->
 
-    <main class="main-container">
+<div class="container py-5">
+
+    <!-- Flash Messages -->
+
+    @if(session('success'))
+
+        <div class="alert alert-success alert-dismissible fade show">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            {{ session('success') }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    @endif
+
+    @if(session('error'))
+
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            {{ session('error') }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    @endif
 
 
-        <!-- Welcome -->
+    <!-- ===================================================== -->
+    <!-- HERO -->
+    <!-- ===================================================== -->
 
-        <div class="welcome-section">
+    <div class="hero-card shadow mb-4">
 
-            <h1>
-                Welcome back, {{ auth()->user()->name }} 👋
-            </h1>
+        <div class="card-body p-4 p-lg-5 position-relative">
 
-            <p>
-                Manage your Google account, security activity and active devices from one place.
-            </p>
+            <div class="row align-items-center">
 
-            <div class="google-badge">
+                <div class="col-lg-8">
 
-                <span class="google-dot"></span>
+                    <div class="d-flex align-items-center gap-4">
 
-                Google Social Login Connected
+                        @if($user->avatar)
+
+                            <img
+                                src="{{ $user->avatar }}"
+                                alt="Profile"
+                                class="profile-avatar">
+
+                        @else
+
+                            <div class="default-avatar">
+
+                                <i class="bi bi-person"></i>
+
+                            </div>
+
+                        @endif
+
+                        <div>
+
+                            <div class="small text-white-50 mb-1">
+
+                                Welcome back
+
+                            </div>
+
+                            <h1 class="fw-bold mb-2">
+
+                                {{ $user->name }}
+
+                            </h1>
+
+                            <div class="text-white-50">
+
+                                {{ $user->email }}
+
+                            </div>
+
+                            @if($user->google_id)
+
+                                <span class="badge bg-light text-dark mt-3">
+
+                                    <i class="bi bi-google me-1"></i>
+
+                                    Google Account Connected
+
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+                    <div class="small text-white-50">
+                        Account Security
+                    </div>
+
+                    <div class="display-4 fw-bold">
+
+                        {{ $score }}%
+
+                    </div>
+
+                    <div class="small text-white-50">
+
+                        Security configuration indicator
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SECURITY STATISTICS -->
+    <!-- ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- Total Logins -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Total Logins
+                            </div>
+
+                            <div class="display-6 fw-bold mt-1">
+
+                                {{ $totalLogins }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon bg-primary-subtle text-primary">
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="small text-muted mt-3">
+
+                        Recorded login events
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
 
-        <!-- =========================
-             PROFILE HERO
-        ========================== -->
+        <!-- Total Logouts -->
 
-        <div class="profile-hero">
+        <div class="col-md-6 col-xl-3">
 
-            <div class="profile-hero-content">
+            <div class="card stat-card shadow-sm h-100">
 
-                <div class="profile-main">
+                <div class="card-body">
 
-@if(auth()->user()->avatar)
+                    <div class="d-flex justify-content-between">
 
-    <img
-        src="{{ auth()->user()->avatar }}"
-        alt="{{ auth()->user()->name }}"
-        class="profile-avatar"
-        onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';">
+                        <div>
 
-    <div
-        id="avatarFallback"
-        class="profile-placeholder"
-        style="display:none;">
-        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            <div class="text-muted small">
+                                Total Logouts
+                            </div>
+
+                            <div class="display-6 fw-bold mt-1">
+
+                                {{ $totalLogouts }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon bg-secondary-subtle text-secondary">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="small text-muted mt-3">
+
+                        Recorded logout events
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Active Devices -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Active Devices
+                            </div>
+
+                            <div class="display-6 fw-bold mt-1">
+
+                                {{ $activeSessions }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon bg-success-subtle text-success">
+
+                            <i class="bi bi-pc-display"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="small text-muted mt-3">
+
+                        Active account sessions
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Session Revokes -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Session Revokes
+                            </div>
+
+                            <div class="display-6 fw-bold mt-1">
+
+                                {{ $sessionRevokes }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon bg-danger-subtle text-danger">
+
+                            <i class="bi bi-shield-x"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="small text-muted mt-3">
+
+                        Recorded session revocations
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-@else
 
-    <div class="profile-placeholder">
-        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+    <!-- ===================================================== -->
+    <!-- ACCOUNT SECURITY -->
+    <!-- ===================================================== -->
+
+    <div class="card security-card shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-7">
+
+                    <h4 class="fw-bold mb-2">
+
+                        <i class="bi bi-shield-check me-2"></i>
+
+                        Account Security
+
+                    </h4>
+
+                    <p class="text-muted mb-4">
+
+                        This indicator is calculated from the account
+                        information and current session configuration
+                        available in this application.
+
+                    </p>
+
+                    <div class="progress"
+                         style="height: 13px;">
+
+                        <div
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width: {{ $score }}%"
+                            aria-valuenow="{{ $score }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-5 mt-4 mt-lg-0">
+
+                    <div class="row g-2">
+
+                        <div class="col-6">
+
+                            <div class="border rounded-3 p-3">
+
+                                <div class="small text-muted">
+                                    Email
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    @if($user->email)
+
+                                        <span class="text-success">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Available
+
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-danger">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                            Missing
+
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="border rounded-3 p-3">
+
+                                <div class="small text-muted">
+                                    Verification
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    @if($user->email_verified_at)
+
+                                        <span class="text-success">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Verified
+
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-warning">
+
+                                            <i class="bi bi-exclamation-circle-fill"></i>
+
+                                            Pending
+
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="border rounded-3 p-3">
+
+                                <div class="small text-muted">
+                                    Google
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    @if($user->google_id)
+
+                                        <span class="text-success">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Connected
+
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-muted">
+
+                                            Not connected
+
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="border rounded-3 p-3">
+
+                                <div class="small text-muted">
+                                    Current Session
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    @if($currentSession)
+
+                                        <span class="text-success">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Active
+
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-danger">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                            Not Found
+
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-@endif
 
+    <!-- ===================================================== -->
+    <!-- FEATURE CARDS -->
+    <!-- ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- Google Profile -->
+
+        <div class="col-md-4">
+
+            <div class="card feature-card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="feature-icon bg-primary-subtle text-primary mb-4">
+
+                        <i class="bi bi-google"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Google Profile
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        View your connected Google account
+                        information and profile details.
+
+                    </p>
+
+                    <a
+                        href="{{ route('profile') }}"
+                        class="btn btn-outline-primary">
+
+                        View Profile
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Login Activity -->
+
+        <div class="col-md-4">
+
+            <div class="card feature-card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="feature-icon bg-success-subtle text-success mb-4">
+
+                        <i class="bi bi-clock-history"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Login Activity
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Search login events, filter activity by
+                        event/date and export records to CSV.
+
+                    </p>
+
+                    <a
+                        href="{{ route('login.activities') }}"
+                        class="btn btn-outline-success">
+
+                        View Activity
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Active Devices -->
+
+        <div class="col-md-4">
+
+            <div class="card feature-card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="feature-icon bg-danger-subtle text-danger mb-4">
+
+                        <i class="bi bi-pc-display"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+
+                        Active Devices
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Search active sessions and revoke
+                        individual or all other devices.
+
+                    </p>
+
+                    <a
+                        href="{{ route('sessions') }}"
+                        class="btn btn-outline-danger">
+
+                        Manage Devices
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- CURRENT SESSION -->
+    <!-- ===================================================== -->
+
+    <div class="card security-card shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        <i class="bi bi-laptop me-2"></i>
+
+                        Current Session
+
+                    </h5>
+
+                    <small class="text-muted">
+
+                        Information about the browser currently being used.
+
+                    </small>
+
+                </div>
+
+                <span class="badge text-bg-success">
+
+                    <i class="bi bi-circle-fill me-1"
+                       style="font-size: 7px;"></i>
+
+                    Active
+
+                </span>
+
+            </div>
+
+            @if($currentSession)
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+
+                        <div class="border rounded-3 p-3 h-100">
+
+                            <div class="small text-muted">
+                                Device
+                            </div>
+
+                            <div class="fw-semibold mt-1">
+
+                                {{ $currentSession->device_name
+                                    ?? 'Unknown Device' }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="border rounded-3 p-3 h-100">
+
+                            <div class="small text-muted">
+                                Browser
+                            </div>
+
+                            <div class="fw-semibold mt-1">
+
+                                {{ $currentSession->browser
+                                    ?? 'Unknown Browser' }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="border rounded-3 p-3 h-100">
+
+                            <div class="small text-muted">
+                                Platform
+                            </div>
+
+                            <div class="fw-semibold mt-1">
+
+                                {{ $currentSession->platform
+                                    ?? 'Unknown Platform' }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="border rounded-3 p-3 h-100">
+
+                            <div class="small text-muted">
+                                IP Address
+                            </div>
+
+                            <div class="fw-semibold mt-1">
+
+                                {{ $currentSession->ip_address ?? '-' }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="small text-muted mt-3">
+
+                    <i class="bi bi-clock me-1"></i>
+
+                    Last activity:
+
+                    {{ optional(
+                        $currentSession->last_activity
+                    )->format(
+                        'd M Y, h:i A'
+                    ) }}
+
+                </div>
+
+            @else
+
+                <div class="alert alert-warning mb-0">
+
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+
+                    Current session information is not available.
+
+                </div>
+
+            @endif
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- RECENT ACTIVITY -->
+    <!-- ===================================================== -->
+
+    <div class="card security-card shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 p-4 pb-2">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        <i class="bi bi-activity me-2"></i>
+
+                        Recent Activity
+
+                    </h5>
+
+                    <small class="text-muted">
+
+                        Your latest account security events.
+
+                    </small>
+
+                </div>
+
+                <a
+                    href="{{ route('login.activities') }}"
+                    class="btn btn-sm btn-outline-primary">
+
+                    View All
+
+                    <i class="bi bi-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            @forelse($recentActivities as $activity)
+
+                @php
+
+                    $event = $activity->event;
+
+                    $eventLabel = ucwords(
+                        str_replace(
+                            '_',
+                            ' ',
+                            $event
+                        )
+                    );
+
+                    $eventIcon = match ($event) {
+
+                        'login' =>
+                            'bi-box-arrow-in-right',
+
+                        'logout' =>
+                            'bi-box-arrow-right',
+
+                        'session_revoked' =>
+                            'bi-shield-x',
+
+                        'all_other_sessions_revoked' =>
+                            'bi-shield-exclamation',
+
+                        default =>
+                            'bi-activity',
+
+                    };
+
+                    $eventClass = match ($event) {
+
+                        'login' =>
+                            'bg-success-subtle text-success',
+
+                        'logout' =>
+                            'bg-secondary-subtle text-secondary',
+
+                        'session_revoked',
+                        'all_other_sessions_revoked' =>
+                            'bg-danger-subtle text-danger',
+
+                        default =>
+                            'bg-primary-subtle text-primary',
+
+                    };
+
+                @endphp
+
+                <div class="activity-row d-flex align-items-center p-4 border-top">
+
+                    <div class="activity-icon {{ $eventClass }} me-3">
+
+                        <i class="bi {{ $eventIcon }}"></i>
+
+                    </div>
+
+                    <div class="flex-grow-1">
+
+                        <div class="fw-semibold">
+
+                            {{ $eventLabel }}
+
+                        </div>
+
+                        <div class="small text-muted">
+
+                            {{ $activity->device_name
+                                ?? 'Unknown Device' }}
+
+                            @if($activity->browser)
+
+                                · {{ $activity->browser }}
+
+                            @endif
+
+                            @if($activity->platform)
+
+                                · {{ $activity->platform }}
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-end">
+
+                        <div class="small fw-semibold">
+
+                            {{ optional(
+                                $activity->created_at
+                            )->format(
+                                'd M Y'
+                            ) }}
+
+                        </div>
+
+                        <div class="small text-muted">
+
+                            {{ optional(
+                                $activity->created_at
+                            )->format(
+                                'h:i A'
+                            ) }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @empty
+
+                <div class="text-center py-5 px-3">
+
+                    <i class="bi bi-clock-history fs-1 text-muted"></i>
+
+                    <h6 class="fw-bold mt-3">
+
+                        No Recent Activity
+
+                    </h6>
+
+                    <p class="text-muted mb-0">
+
+                        Your account activity will appear here.
+
+                    </p>
+
+                </div>
+
+            @endforelse
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SECURITY ACTIONS -->
+    <!-- ===================================================== -->
+
+    <div class="card security-card shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h5 class="fw-bold">
+
+                        <i class="bi bi-shield-lock me-2"></i>
+
+                        Security Management
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Review account activity and manage active
+                        devices from the security management pages.
+
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 mt-3 mt-lg-0">
+
+                    <div class="d-flex justify-content-lg-end gap-2 flex-wrap">
+
+                        <a
+                            href="{{ route('login.activities') }}"
+                            class="btn btn-outline-dark">
+
+                            <i class="bi bi-clock-history me-1"></i>
+
+                            Activity
+
+                        </a>
+
+                        <a
+                            href="{{ route('sessions') }}"
+                            class="btn btn-dark">
+
+                            <i class="bi bi-pc-display me-1"></i>
+
+                            Devices
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ACCOUNT INFORMATION -->
+    <!-- ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+
+            <div class="card security-card shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+
+                        <i class="bi bi-person-vcard me-2"></i>
+
+                        Account Information
+
+                    </h5>
+
+                    <div class="mb-3">
+
+                        <div class="small text-muted">
+                            Name
+                        </div>
+
+                        <div class="fw-semibold">
+                            {{ $user->name }}
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <div class="small text-muted">
+                            Email
+                        </div>
+
+                        <div class="fw-semibold">
+                            {{ $user->email }}
+                        </div>
+
+                    </div>
 
                     <div>
 
-                        <h3>
-                            {{ auth()->user()->name }}
-                        </h3>
+                        <div class="small text-muted">
+                            Last Login
+                        </div>
 
-                        <p>
-                            {{ auth()->user()->email }}
-                        </p>
+                        <div class="fw-semibold">
 
-                        <span class="verified-badge">
+                            @if($user->last_login_at)
 
-                            <i class="bi bi-check-circle-fill"></i>
+                                {{ $user->last_login_at->format(
+                                    'd M Y, h:i A'
+                                ) }}
 
-                            Google Verified Account
+                            @else
+
+                                Not available
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card security-card shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        Security Status
+
+                    </h5>
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <span>
+                            Email
+                        </span>
+
+                        @if($user->email)
+
+                            <span class="badge text-bg-success">
+                                Available
+                            </span>
+
+                        @else
+
+                            <span class="badge text-bg-danger">
+                                Missing
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <span>
+                            Email Verification
+                        </span>
+
+                        @if($user->email_verified_at)
+
+                            <span class="badge text-bg-success">
+                                Verified
+                            </span>
+
+                        @else
+
+                            <span class="badge text-bg-warning">
+                                Pending
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <span>
+                            Google Account
+                        </span>
+
+                        @if($user->google_id)
+
+                            <span class="badge text-bg-success">
+                                Connected
+                            </span>
+
+                        @else
+
+                            <span class="badge text-bg-secondary">
+                                Not Connected
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <div class="d-flex justify-content-between
+                                align-items-center">
+
+                        <span>
+                            Active Sessions
+                        </span>
+
+                        <span class="badge text-bg-primary">
+
+                            {{ $activeSessions }}
 
                         </span>
 
@@ -688,254 +1488,31 @@
 
                 </div>
 
-
-                <div class="profile-action">
-
-                    <a href="{{ route('profile') }}">
-
-                        <i class="bi bi-person"></i>
-
-                        View Profile
-
-                    </a>
-
-                </div>
-
             </div>
 
         </div>
 
+    </div>
 
-        <!-- =========================
-             ALERTS
-        ========================== -->
 
-        @if(session('success'))
+    <!-- ===================================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================================== -->
 
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="text-center footer py-3">
 
-                <i class="bi bi-check-circle-fill me-2"></i>
+        <i class="bi bi-shield-check me-1"></i>
 
-                {{ session('success') }}
+        Your security activity is managed locally by this application.
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-                </button>
+    </div>
 
-            </div>
+</div>
 
-        @endif
 
-
-        @if(session('error'))
-
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-
-                {{ session('error') }}
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-                </button>
-
-            </div>
-
-        @endif
-
-
-        <!-- =========================
-             SECURITY FEATURES
-        ========================== -->
-
-        <div class="section-heading">
-
-            <h2>
-                Account & Security
-            </h2>
-
-            <p>
-                Manage your profile and monitor your account security.
-            </p>
-
-        </div>
-
-
-        <div class="row g-4">
-
-
-            <!-- Profile -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon icon-profile">
-
-                        <i class="bi bi-person-badge"></i>
-
-                    </div>
-
-                    <h3>
-                        Google Profile
-                    </h3>
-
-                    <p>
-                        View your Google account details, profile picture,
-                        email address and stored Socialite information.
-                    </p>
-
-                    <a
-                        href="{{ route('profile') }}"
-                        class="feature-link">
-
-                        View Profile
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- Login Activity -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon icon-security">
-
-                        <i class="bi bi-clock-history"></i>
-
-                    </div>
-
-                    <h3>
-                        Login Activity
-                    </h3>
-
-                    <p>
-                        Monitor your Google login and logout history,
-                        including browser, device, IP address and time.
-                    </p>
-
-                    <a
-                        href="{{ route('login.activities') }}"
-                        class="feature-link">
-
-                        View Activity
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- Active Devices -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="feature-card">
-
-                    <div class="feature-icon icon-devices">
-
-                        <i class="bi bi-phone"></i>
-
-                    </div>
-
-                    <h3>
-                        Active Devices
-                    </h3>
-
-                    <p>
-                        View your active sessions and revoke access
-                        from devices you no longer use.
-                    </p>
-
-                    <a
-                        href="{{ route('sessions') }}"
-                        class="feature-link">
-
-                        Manage Devices
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- =========================
-             SECURITY STATUS
-        ========================== -->
-
-        <div class="security-box">
-
-            <div class="security-header">
-
-                <div class="security-title">
-
-                    <div class="security-title-icon">
-
-                        <i class="bi bi-shield-check"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Account Security
-                        </h4>
-
-                        <p>
-                            Your Google authentication session is active.
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <div class="secure-status">
-
-                    <span></span>
-
-                    Secure
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="footer">
-
-            Google Social Login · Laravel {{ app()->version() }}
-
-        </div>
-
-    </main>
-
-
-    <!-- Bootstrap JS -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 </body>
 
