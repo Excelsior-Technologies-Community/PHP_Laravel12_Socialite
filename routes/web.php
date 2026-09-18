@@ -6,12 +6,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LoginActivityController;
 use App\Http\Controllers\UserSessionController;
 
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,12 +13,6 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
-
-/*
-|--------------------------------------------------------------------------
-| Google OAuth Routes
-|--------------------------------------------------------------------------
-*/
 
 Route::get(
     '/login/google',
@@ -36,29 +24,111 @@ Route::get(
     [SocialiteController::class, 'callback']
 )->name('google.callback');
 
-/*
-|--------------------------------------------------------------------------
-| Protected Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'check.session'])->group(function () {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard
-    |--------------------------------------------------------------------------
-    */
+Route::middleware([
+    'auth',
+    'check.session'
+])->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+        $user = request()->user();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Google Profile
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Security Statistics
+        |--------------------------------------------------------------------------
+        */
+
+        $totalLogins = $user->loginActivities()
+            ->where('event', 'login')
+            ->count();
+
+        $totalLogouts = $user->loginActivities()
+            ->where('event', 'logout')
+            ->count();
+
+        $sessionRevokes = $user->loginActivities()
+            ->whereIn('event', [
+                'session_revoked',
+                'all_other_sessions_revoked',
+            ])
+            ->count();
+
+        $activeSessions = $user->sessions()
+            ->whereNull('revoked_at')
+            ->count();
+
+        $currentSessionId = request()
+            ->session()
+            ->getId();
+
+        $currentSession = $user->sessions()
+            ->where('session_id', $currentSessionId)
+            ->whereNull('revoked_at')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Recent Activity
+        |--------------------------------------------------------------------------
+        */
+
+        $recentActivities = $user->loginActivities()
+            ->latest('created_at')
+            ->limit(6)
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Account Security Score
+        |--------------------------------------------------------------------------
+        |
+        | This is a simple local completeness indicator based on
+        | account/session configuration. It does not call Google APIs.
+        |
+        */
+
+        $score = 0;
+
+        // Email exists
+        if (!empty($user->email)) {
+            $score += 20;
+        }
+
+        // Email verified
+        if (!empty($user->email_verified_at)) {
+            $score += 20;
+        }
+
+        // Name exists
+        if (!empty($user->name)) {
+            $score += 15;
+        }
+
+        // Google account linked
+        if (!empty($user->google_id)) {
+            $score += 20;
+        }
+
+        // Avatar exists
+        if (!empty($user->avatar)) {
+            $score += 10;
+        }
+
+        // Active current session
+        if ($currentSession) {
+            $score += 15;
+        }
+
+        return view('dashboard', compact(
+            'totalLogins',
+            'totalLogouts',
+            'sessionRevokes',
+            'activeSessions',
+            'recentActivities',
+            'currentSession',
+            'score'
+        ));
+    })->name('dashboard');
 
     Route::get(
         '/profile',
@@ -67,7 +137,7 @@ Route::middleware(['auth', 'check.session'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Login Activity
+    | Login Activities
     |--------------------------------------------------------------------------
     */
 
@@ -76,9 +146,14 @@ Route::middleware(['auth', 'check.session'])->group(function () {
         [LoginActivityController::class, 'index']
     )->name('login.activities');
 
+    Route::get(
+        '/login-activities/export',
+        [LoginActivityController::class, 'export']
+    )->name('login.activities.export');
+
     /*
     |--------------------------------------------------------------------------
-    | Active Sessions
+    | Sessions
     |--------------------------------------------------------------------------
     */
 
@@ -91,6 +166,11 @@ Route::middleware(['auth', 'check.session'])->group(function () {
         '/sessions/{session}/revoke',
         [UserSessionController::class, 'revoke']
     )->name('sessions.revoke');
+
+    Route::post(
+        '/sessions/revoke-all-others',
+        [UserSessionController::class, 'revokeAllOthers']
+    )->name('sessions.revoke.all.others');
 
     /*
     |--------------------------------------------------------------------------

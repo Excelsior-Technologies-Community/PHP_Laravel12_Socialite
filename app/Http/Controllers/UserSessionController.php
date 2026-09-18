@@ -14,30 +14,80 @@ class UserSessionController extends Controller
      */
     public function index(Request $request)
     {
+        $user = $request->user();
+
         $currentSessionId = $request->session()->getId();
 
-        $sessions = UserSession::where('user_id', $request->user()->id)
-            ->whereNull('revoked_at')
+        $query = UserSession::where('user_id', $user->id)
+            ->whereNull('revoked_at');
+
+        // Active-session search
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+                $q->where('device_name', 'like', "%{$search}%")
+                    ->orWhere('browser', 'like', "%{$search}%")
+                    ->orWhere('platform', 'like', "%{$search}%")
+                    ->orWhere('ip_address', 'like', "%{$search}%")
+                    ->orWhere('user_agent', 'like', "%{$search}%");
+            });
+        }
+
+        // Platform filter
+        if ($request->filled('platform')) {
+            $query->where('platform', $request->platform);
+        }
+
+        // Browser filter
+        if ($request->filled('browser')) {
+            $query->where('browser', $request->browser);
+        }
+
+        $sessions = $query
             ->latest('last_activity')
             ->get();
 
+        $platforms = UserSession::where('user_id', $user->id)
+            ->whereNull('revoked_at')
+            ->whereNotNull('platform')
+            ->select('platform')
+            ->distinct()
+            ->orderBy('platform')
+            ->pluck('platform');
+
+        $browsers = UserSession::where('user_id', $user->id)
+            ->whereNull('revoked_at')
+            ->whereNotNull('browser')
+            ->select('browser')
+            ->distinct()
+            ->orderBy('browser')
+            ->pluck('browser');
+
         return view('sessions', compact(
             'sessions',
-            'currentSessionId'
+            'currentSessionId',
+            'platforms',
+            'browsers'
         ));
     }
 
     /**
      * Revoke a specific session.
      */
-    public function revoke(Request $request, UserSession $session)
-    {
+    public function revoke(
+        Request $request,
+        UserSession $session
+    ) {
         abort_if(
             $session->user_id !== $request->user()->id,
             403
         );
 
-        if ($session->session_id === $request->session()->getId()) {
+        if (
+            $session->session_id ===
+            $request->session()->getId()
+        ) {
             return back()->with(
                 'error',
                 'You cannot revoke your current session. Use Logout instead.'
@@ -54,15 +104,86 @@ class UserSessionController extends Controller
             'provider' => 'google',
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'device_name' => $this->getDeviceName($request->userAgent()),
-            'browser' => $this->getBrowser($request->userAgent()),
-            'platform' => $this->getPlatform($request->userAgent()),
+            'device_name' => $this->getDeviceName(
+                $request->userAgent()
+            ),
+            'browser' => $this->getBrowser(
+                $request->userAgent()
+            ),
+            'platform' => $this->getPlatform(
+                $request->userAgent()
+            ),
             'created_at' => now(),
         ]);
 
         return back()->with(
             'success',
             'The selected device session has been revoked.'
+        );
+    }
+
+    /**
+     * Revoke all other devices.
+     */
+    public function revokeAllOthers(Request $request)
+    {
+        $user = $request->user();
+
+        $currentSessionId = $request->session()->getId();
+
+        $otherSessions = UserSession::where(
+            'user_id',
+            $user->id
+        )
+            ->whereNull('revoked_at')
+            ->where(
+                'session_id',
+                '!=',
+                $currentSessionId
+            )
+            ->get();
+
+        $count = $otherSessions->count();
+
+        if ($count > 0) {
+            UserSession::where(
+                'user_id',
+                $user->id
+            )
+                ->whereNull('revoked_at')
+                ->where(
+                    'session_id',
+                    '!=',
+                    $currentSessionId
+                )
+                ->update([
+                    'revoked_at' => now(),
+                ]);
+
+            LoginActivity::create([
+                'user_id' => $user->id,
+                'event' => 'all_other_sessions_revoked',
+                'provider' => 'google',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'device_name' => $this->getDeviceName(
+                    $request->userAgent()
+                ),
+                'browser' => $this->getBrowser(
+                    $request->userAgent()
+                ),
+                'platform' => $this->getPlatform(
+                    $request->userAgent()
+                ),
+                'created_at' => now(),
+            ]);
+        }
+
+        return back()->with(
+            'success',
+            $count > 0
+                ? "{$count} other device session(s) have been revoked."
+                : 'There are no other active device sessions.'
         );
     }
 
@@ -79,16 +200,24 @@ class UserSessionController extends Controller
             'provider' => 'google',
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'device_name' => $this->getDeviceName($request->userAgent()),
-            'browser' => $this->getBrowser($request->userAgent()),
-            'platform' => $this->getPlatform($request->userAgent()),
+            'device_name' => $this->getDeviceName(
+                $request->userAgent()
+            ),
+            'browser' => $this->getBrowser(
+                $request->userAgent()
+            ),
+            'platform' => $this->getPlatform(
+                $request->userAgent()
+            ),
             'created_at' => now(),
         ]);
 
-        UserSession::where('session_id', $request->session()->getId())
-            ->update([
-                'revoked_at' => now(),
-            ]);
+        UserSession::where(
+            'session_id',
+            $request->session()->getId()
+        )->update([
+            'revoked_at' => now(),
+        ]);
 
         Auth::logout();
 
@@ -97,7 +226,10 @@ class UserSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login')
-            ->with('success', 'You have been logged out successfully.');
+            ->with(
+                'success',
+                'You have been logged out successfully.'
+            );
     }
 
     private function getDeviceName(?string $userAgent): string
