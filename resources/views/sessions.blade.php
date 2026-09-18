@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -8,223 +7,401 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0">
+        content="width=device-width, initial-scale=1">
 
-    <title>Active Devices</title>
+    <title>Active Sessions</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-        }
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
-            margin-bottom: 20px;
-        }
-
-        .session {
-            border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-
-        .session-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .device {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .current {
-            display: inline-block;
-            background: #d1e7dd;
-            color: #0f5132;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .details {
-            margin-top: 15px;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        .revoke {
-            background: #dc3545;
-            color: white;
-            border: 0;
-            padding: 9px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 16px;
-            background: #0d6efd;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        .alert {
-            padding: 14px;
-            border-radius: 7px;
-            margin-bottom: 20px;
-        }
-
-        .success {
-            background: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #842029;
-        }
-    </style>
-
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
 
 </head>
 
-<body>
+<body class="bg-light">
 
-    <div class="container">
+<div class="container py-5">
 
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div class="card">
+        <div>
 
-            <h1>📱 Active Devices</h1>
+            <h2 class="fw-bold">
 
-            <p>
-                Manage the devices currently authenticated to your account.
-            </p>
+                <i class="bi bi-pc-display"></i>
 
-            @if(session('success'))
+                Active Sessions
 
-            <div class="alert success">
-                {{ session('success') }}
-            </div>
+            </h2>
 
-            @endif
+            <p class="text-muted mb-0">
 
-            @if(session('error'))
+                Manage devices currently signed in to your account.
 
-            <div class="alert error">
-                {{ session('error') }}
-            </div>
-
-            @endif
-
-        </div>
-
-        @forelse($sessions as $session)
-
-        <div class="session">
-
-            <div class="session-header">
-
-                <div>
-
-                    <div class="device">
-                        {{ $session->device_name }}
-                    </div>
-
-                    @if($session->session_id === $currentSessionId)
-
-                    <span class="current">
-                        CURRENT SESSION
-                    </span>
-
-                    @endif
-
-                </div>
-
-                @if($session->session_id !== $currentSessionId)
-
-                <form
-                    action="{{ route('sessions.revoke', $session) }}"
-                    method="POST">
-
-                    @csrf
-
-                    <button
-                        type="submit"
-                        class="revoke"
-                        onclick="return confirm('Are you sure you want to revoke this session?')">
-                        Revoke
-                    </button>
-
-                </form>
-
-                @endif
-
-            </div>
-
-            <div class="details">
-
-                <strong>Browser:</strong>
-                {{ $session->browser }}
-
-                <br>
-
-                <strong>Platform:</strong>
-                {{ $session->platform }}
-
-                <br>
-
-                <strong>IP Address:</strong>
-                {{ $session->ip_address }}
-
-                <br>
-
-                <strong>Last Activity:</strong>
-                {{ $session->last_activity
-                ? $session->last_activity->format('d M Y, h:i A')
-                : 'Not available' }}
-
-            </div>
-
-        </div>
-
-        @empty
-
-        <div class="card">
-
-            <p>
-                No active sessions found.
             </p>
 
         </div>
-
-        @endforelse
 
         <a
             href="{{ route('dashboard') }}"
-            class="button">
-            ← Back to Dashboard
+            class="btn btn-outline-dark">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Dashboard
+
         </a>
 
+    </div>
+
+    @if(session('success'))
+
+        <div class="alert alert-success">
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+    @if(session('error'))
+
+        <div class="alert alert-danger">
+
+            {{ session('error') }}
+
+        </div>
+
+    @endif
+
+    <!-- Search / Filters -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET"
+                  action="{{ route('sessions') }}">
+
+                <div class="row g-3">
+
+                    <div class="col-md-5">
+
+                        <label class="form-label fw-semibold">
+
+                            Search Sessions
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            class="form-control"
+                            placeholder="Device, browser, platform, IP...">
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Platform
+
+                        </label>
+
+                        <select
+                            name="platform"
+                            class="form-select">
+
+                            <option value="">
+                                All Platforms
+                            </option>
+
+                            @foreach($platforms as $platform)
+
+                                <option
+                                    value="{{ $platform }}"
+                                    @selected(request('platform') === $platform)>
+
+                                    {{ $platform }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Browser
+
+                        </label>
+
+                        <select
+                            name="browser"
+                            class="form-select">
+
+                            <option value="">
+                                All Browsers
+                            </option>
+
+                            @foreach($browsers as $browser)
+
+                                <option
+                                    value="{{ $browser }}"
+                                    @selected(request('browser') === $browser)>
+
+                                    {{ $browser }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button
+                            class="btn btn-primary w-100"
+                            type="submit">
+
+                            <i class="bi bi-search"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
+
+    <!-- Revoke all -->
+
+    <div class="card border-danger shadow-sm mb-4">
+
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h5 class="mb-1">
+
+                    <i class="bi bi-shield-exclamation text-danger"></i>
+
+                    Revoke all other devices
+
+                </h5>
+
+                <p class="text-muted mb-0">
+
+                    Your current browser will remain active.
+
+                </p>
+
+            </div>
+
+            <form
+                method="POST"
+                action="{{ route('sessions.revoke.all.others') }}"
+                onsubmit="return confirm(
+                    'Are you sure you want to revoke all other devices?'
+                );">
+
+                @csrf
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-shield-x"></i>
+
+                    Revoke All Other Devices
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Sessions -->
+
+    <div class="row g-4">
+
+        @forelse($sessions as $session)
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <div>
+
+                                <i class="bi bi-display fs-1"></i>
+
+                            </div>
+
+                            @if(
+                                $session->session_id ===
+                                $currentSessionId
+                            )
+
+                                <span class="badge text-bg-success">
+
+                                    Current Session
+
+                                </span>
+
+                            @else
+
+                                <span class="badge text-bg-secondary">
+
+                                    Active
+
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                        <h5 class="fw-bold">
+
+                            {{ $session->device_name ?? 'Unknown Device' }}
+
+                        </h5>
+
+                        <div class="small text-muted mb-1">
+
+                            <i class="bi bi-globe2"></i>
+
+                            {{ $session->browser ?? 'Unknown Browser' }}
+
+                        </div>
+
+                        <div class="small text-muted mb-1">
+
+                            <i class="bi bi-laptop"></i>
+
+                            {{ $session->platform ?? 'Unknown Platform' }}
+
+                        </div>
+
+                        <div class="small text-muted mb-1">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            {{ $session->ip_address ?? '-' }}
+
+                        </div>
+
+                        <div class="small text-muted">
+
+                            <i class="bi bi-clock"></i>
+
+                            Last activity:
+
+                            {{ optional(
+                                $session->last_activity
+                            )->format(
+                                'd M Y, h:i A'
+                            ) }}
+
+                        </div>
+
+                        @if(
+                            $session->session_id !==
+                            $currentSessionId
+                        )
+
+                            <form
+                                method="POST"
+                                action="{{
+                                    route(
+                                        'sessions.revoke',
+                                        $session
+                                    )
+                                }}"
+                                class="mt-3"
+                                onsubmit="return confirm(
+                                    'Revoke this session?'
+                                );">
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-danger w-100">
+
+                                    <i class="bi bi-x-circle"></i>
+
+                                    Revoke Session
+
+                                </button>
+
+                            </form>
+
+                        @else
+
+                            <div class="alert alert-success mt-3 mb-0">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                This is your current session.
+
+                            </div>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-pc-display-horizontal fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+
+                            No active sessions found.
+
+                        </h5>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @endforelse
+
+    </div>
+
+</div>
 
 </body>
 
