@@ -15,7 +15,11 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'twitter_id',
+        'nickname',
+        'bio',
         'avatar',
+        'local_avatar',
         'last_login_at',
     ];
 
@@ -41,5 +45,10 @@ class User extends Authenticatable
     public function sessions()
     {
         return $this->hasMany(UserSession::class);
+    }
+
+    public function oauthTokens()
+    {
+        return $this->hasMany(OAuthToken::class);
     }
 }
