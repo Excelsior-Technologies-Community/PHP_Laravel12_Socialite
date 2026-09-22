@@ -24,6 +24,25 @@ Route::get(
     [SocialiteController::class, 'callback']
 )->name('google.callback');
 
+Route::get('/auth/callback/google', [SocialiteController::class, 'callback']);
+Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
+Route::get('/google/callback', [SocialiteController::class, 'callback']);
+
+Route::get(
+    '/login/twitter',
+    [SocialiteController::class, 'redirectTwitter']
+)->name('twitter.redirect');
+
+Route::get(
+    '/login/twitter/callback',
+    [SocialiteController::class, 'callbackTwitter']
+)->name('twitter.callback');
+
+Route::get('/auth/twitter/callback', [SocialiteController::class, 'callbackTwitter']);
+Route::get('/auth/callback/twitter', [SocialiteController::class, 'callbackTwitter']);
+Route::get('/twitter/callback', [SocialiteController::class, 'callbackTwitter']);
+
+
 Route::middleware([
     'auth',
     'check.session'
@@ -134,6 +153,11 @@ Route::middleware([
         '/profile',
         [ProfileController::class, 'index']
     )->name('profile');
+
+    Route::post(
+        '/profile/sync-social',
+        [ProfileController::class, 'syncSocialProfile']
+    )->name('profile.sync-social');
 
     /*
     |--------------------------------------------------------------------------

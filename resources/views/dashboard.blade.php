@@ -292,56 +292,48 @@
 
                     <div class="d-flex align-items-center gap-4">
 
-                        @if($user->avatar)
-
-                            <img
-                                src="{{ $user->avatar }}"
-                                alt="Profile"
-                                class="profile-avatar">
-
-                        @else
-
-                            <div class="default-avatar">
-
-                                <i class="bi bi-person"></i>
-
-                            </div>
-
-                        @endif
-
-                        <div>
-
-                            <div class="small text-white-50 mb-1">
-
-                                Welcome back
-
-                            </div>
-
-                            <h1 class="fw-bold mb-2">
-
-                                {{ $user->name }}
-
-                            </h1>
-
-                            <div class="text-white-50">
-
-                                {{ $user->email }}
-
-                            </div>
-
-                            @if($user->google_id)
-
-                                <span class="badge bg-light text-dark mt-3">
-
-                                    <i class="bi bi-google me-1"></i>
-
-                                    Google Account Connected
-
-                                </span>
-
+                            @if($user->local_avatar || $user->avatar)
+                                <img src="{{ $user->local_avatar ?: $user->avatar }}" alt="Profile" class="profile-avatar">
+                            @else
+                                <div class="default-avatar">
+                                    <i class="bi bi-person"></i>
+                                </div>
                             @endif
 
-                        </div>
+                            <div>
+                                <div class="small text-white-50 mb-1">
+                                    Welcome back
+                                </div>
+                                <h1 class="fw-bold mb-1">
+                                    {{ $user->name }}
+                                </h1>
+                                <div class="text-white-50 small mb-2">
+                                    {{ $user->email }}
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    @if($user->google_id)
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-google me-1 text-danger"></i>
+                                            Google Connected
+                                        </span>
+                                    @endif
+
+                                    @if($user->twitter_id)
+                                        <span class="badge bg-dark text-white border border-secondary">
+                                            <i class="bi bi-twitter-x me-1"></i>
+                                            Twitter (X) Connected
+                                        </span>
+                                    @endif
+
+                                    @if($user->local_avatar)
+                                        <span class="badge bg-success-subtle text-success">
+                                            <i class="bi bi-shield-check me-1"></i>
+                                            Avatar Cached Locally
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
 
                     </div>
 
@@ -561,6 +553,69 @@
 
     </div>
 
+
+    <!-- ===================================================== -->
+    <!-- OAUTH TOKEN VAULT & 1-TAP PROFILE SYNC -->
+    <!-- ===================================================== -->
+
+    <div class="card security-card shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        <i class="bi bi-key-fill text-primary me-2"></i>
+                        OAuth Access Token Vault & Auto-Refresh Engine
+                    </h5>
+                    <small class="text-muted">
+                        Encrypted token storage with background auto-refresh & 1-tap avatar caching
+                    </small>
+                </div>
+                <form method="POST" action="{{ route('profile.sync-social') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-arrow-repeat me-1"></i>
+                        1-Tap Sync Profile & Avatar
+                    </button>
+                </form>
+            </div>
+
+            <div class="row g-3">
+                @forelse($user->oauthTokens as $token)
+                    <div class="col-md-6">
+                        <div class="border rounded-3 p-3 bg-light">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-uppercase">
+                                    @if($token->provider === 'google')
+                                        <i class="bi bi-google text-danger me-1"></i> Google OAuth
+                                    @elseif($token->provider === 'twitter')
+                                        <i class="bi bi-twitter-x text-dark me-1"></i> Twitter (X) OAuth
+                                    @else
+                                        <i class="bi bi-shield-lock me-1"></i> {{ $token->provider }}
+                                    @endif
+                                </span>
+                                <span class="badge {{ $token->isExpired() ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' }}">
+                                    {{ $token->isExpired() ? '🔴 Expired (Auto-Refreshing)' : '🟢 Encrypted & Active' }}
+                                </span>
+                            </div>
+                            <div class="small text-muted mb-1 font-monospace">
+                                Token Status: <strong class="text-dark">256-bit AES Encrypted Vault</strong>
+                            </div>
+                            <div class="small text-muted">
+                                Expires: {{ $token->expires_at ? $token->expires_at->diffForHumans() : 'Never' }}
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            No active OAuth tokens in vault. Login via Google or Twitter (X) to store encrypted OAuth tokens.
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
 
     <!-- ===================================================== -->
     <!-- ACCOUNT SECURITY -->
